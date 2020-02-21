@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="editorDiv">
 		<mavon-editor v-model="markdownText" :toolbars="toolbarConfig" :style="editorStyle"/>
 	</div>
 </template>
@@ -51,8 +51,15 @@
 			editorStyle () {
 				console.log(window.innerHeight)
 				return {
-					height: (window.innerHeight - 20) + 'px'
+					height: '530px'
 				}
+			}
+		},
+		mounted () {
+			document.getElementById('editorDiv').ondragstart = (event) => {
+				event.preventDefault()
+				ipcRenderer.send('ondragstart', '/path/to/item')
+				console.log('drag file')
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -18,9 +18,17 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 600,
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    frame: false, // 默认标题栏去掉
+    // resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      webSecurity: false,
+      devTools: true
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -28,6 +36,28 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  // 去除原生顶部菜单栏
+  mainWindow.setMenu(null)
+
+  // 主进程监听渲染器进程发来的事件
+  // 关闭窗口
+  ipcMain.on('close', () => {
+    mainWindow.close()
+  })
+
+  ipcMain.on('min', () => {
+    mainWindow.minimize()
+  })
+
+  ipcMain.on('max', () => {
+    mainWindow.maximize()
+  })
+
+  ipcMain.on('unmax', () => {
+    mainWindow.unmaximize()
+  })
+
 }
 
 app.on('ready', createWindow)
