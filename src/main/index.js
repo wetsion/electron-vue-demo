@@ -58,9 +58,44 @@ function createWindow () {
     mainWindow.unmaximize()
   })
 
+  ipcMain.on('ondragstart', (event, filePath) => {
+    event.sender.startDrag({
+      file: filePath,
+      icon: `file://${__dirname}/title/max.png`
+    })
+  })
+
+
+	// 自定义Mac 的 dock菜单
+	const dockMenu = Menu.buildFromTemplate([
+		{
+			label: '新窗口',
+			click () {
+				console.log('新窗口')
+			}
+		},{
+	    label: '打开',
+      click () {
+	      console.log('打开文件')
+      }
+    }
+	])
+	app.dock.setMenu(dockMenu)
+
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+	const menu = Menu.buildFromTemplate([
+		{
+			label: '打开...',
+			click () {
+				console.log('打开')
+			}
+		}
+	])
+	Menu.setApplicationMenu(menu)
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -93,14 +128,3 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
-
-// 自定义Mac 的 dock菜单
-const dockMenu = Menu.buildFromTemplate([
-  {
-    label: '新窗口',
-    click () {
-      console.log('新窗口')
-    }
-  }
-])
-app.dock.setMenu(dockMenu)

@@ -1,15 +1,17 @@
 <template>
 	<div id="editorDiv">
-		<mavon-editor v-model="markdownText" :toolbars="toolbarConfig" :style="editorStyle"/>
+		<mavon-editor v-model="markdownText" :toolbars="toolbarConfig" :style="editorStyle" @save="saveMd"/>
 	</div>
 </template>
 
 <script>
+	const fs = require('fs')
 	export default {
 		name: 'edit',
 		data () {
 			return {
 				markdownText: '',
+				sourceFilePath: '',
 				toolbarConfig: {
 					bold: true, // 粗体
 					italic: true, // 斜体
@@ -56,10 +58,36 @@
 			}
 		},
 		mounted () {
-			document.getElementById('editorDiv').ondragstart = (event) => {
+			const editorDiv = document.getElementById('editorDiv')
+
+			// editorDiv.ondragstart = (event) => {
+			// 	event.preventDefault()
+			// 	const file = event.dataTransfer.files
+			// 	const path = file[0].path
+			// 	ipcRenderer.send('ondragstart', '/path/to/item')
+			// }
+
+			editorDiv.addEventListener('drop', (event) => {
 				event.preventDefault()
-				ipcRenderer.send('ondragstart', '/path/to/item')
-				console.log('drag file')
+				const file = event.dataTransfer.files
+				const path = file[0].path
+				this.sourceFilePath = path
+				console.log('drag file:', path)
+				const content = fs.readFileSync(path)
+				const cttStr = content.toString()
+				console.log(cttStr)
+				this.markdownText = cttStr
+				// this.$electron.ipcRenderer.send('ondragstart', path)
+			})
+
+			editorDiv.addEventListener('dragover', (event) => {
+				event.preventDefault()
+			})
+		},
+		methods: {
+			saveMd () {
+				fs.writeFileSync(this.sourceFilePath, this.markdownText)
+				this.$message.success('保存成功！')
 			}
 		}
 	}
