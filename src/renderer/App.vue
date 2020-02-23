@@ -1,19 +1,12 @@
 <template>
   <div id="app">
-    <div id="title">
-      <Title/>
-    </div>
-    <div id="container">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import Title from '@/components/Title/title'
   export default {
-    name: 'electron-vue-demo',
-    components: { Title }
+    name: 'electron-vue-demo'
   }
 </script>
 

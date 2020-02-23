@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "electron-vue-demo",
+    "productName": "秋月编辑器",
     "appId": "site.wetsion.electron-vue-demo",
     "directories": {
       "output": "build"

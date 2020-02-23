@@ -5,6 +5,9 @@
 			<title-btn type="min"/>
 			<title-btn type="close"/>
 		</div>
+		<div class="center">
+			<span>{{ label }}</span>
+		</div>
 		<div class="right">
 			<span class="name">秋月编辑器-MarkDown神器</span>
 		</div>
@@ -13,9 +16,12 @@
 
 <script>
 	import TitleBtn from './TitleBtn/title-btn'
-	export default {
+	import { getMdFilePath } from '@/utils/storerage'
+
+  export default {
 		name: 'title',
-		components: { TitleBtn }
+		components: { TitleBtn },
+		props: ['label']
 	}
 </script>
 
@@ -32,6 +38,14 @@
 	.left {
 		display: flex;
 		-webkit-app-region: drag;
+	}
+
+	.center {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 12px;
+    -webkit-app-region: drag;
 	}
 
 	.right {
